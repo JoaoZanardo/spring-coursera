@@ -12,9 +12,6 @@ import java.util.List;
 
 @RestController
 public class TodoController {
-    @Value("${application.name}")
-    private String appName;
-
     @Autowired
     private TodoService todoService;
 

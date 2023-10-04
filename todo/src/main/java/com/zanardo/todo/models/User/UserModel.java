@@ -33,6 +33,7 @@ public class UserModel implements UserDetails {
         this.accountName = user.accountName();
         this.password = user.password();
         this.role = user.role();
+        this.createAt = new Date();
     }
 
     @Override
