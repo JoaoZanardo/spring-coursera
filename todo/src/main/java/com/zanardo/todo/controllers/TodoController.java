@@ -1,15 +1,13 @@
 package com.zanardo.todo.controllers;
 
-import com.zanardo.todo.models.Todo.CreateTodoModelDTO;
+import com.zanardo.todo.models.Todo.TodoDTO;
 import com.zanardo.todo.models.Todo.TodoModel;
 import com.zanardo.todo.services.TodoService;
-import com.zanardo.todo.models.Todo.UpdateTodoModelDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Array;
 import java.util.List;
 
 @RestController
@@ -21,42 +19,39 @@ public class TodoController {
     private TodoService todoService;
 
     @GetMapping("/todo/{todoId}")
-    public ResponseEntity<TodoModel> findById(@PathVariable("todoId") String todoId) {
-        TodoModel todo = this.todoService.findById(todoId);
-
-        return ResponseEntity.ok(todo);
+    public TodoModel findById(@PathVariable("todoId") String todoId) {
+        return this.todoService.findById(todoId);
     }
 
     @PostMapping("/todo")
-    public ResponseEntity create(@RequestBody CreateTodoModelDTO todoBody) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public String create(@RequestBody TodoDTO todoBody) {
         TodoModel todo = new TodoModel(todoBody);
 
         TodoModel createdTodo = this.todoService.create(todo);
 
-        return ResponseEntity.ok("Created successfully!");
+        return "Created successfully!";
     }
 
     @DeleteMapping("/todo/{todoId}")
-    public ResponseEntity delete(@PathVariable("todoId") String todoId) {
+    public String delete(@PathVariable("todoId") String todoId) {
         this.todoService.delete(todoId);
 
-        return ResponseEntity.ok("Deleted successfully!");
+        return "Deleted successfully!";
     }
 
     @PutMapping("/todo/{todoId}")
-    public ResponseEntity update(
+    public String update(
             @PathVariable("todoId") String todoId,
-            @RequestBody UpdateTodoModelDto todoBody
+            @RequestBody TodoDTO todoBody
     ) {
         this.todoService.update(todoId, todoBody);
 
-        return ResponseEntity.ok("Updated successfully!");
+        return "Updated successfully!";
     }
 
     @GetMapping("/todo")
-    public ResponseEntity<List<TodoModel>> list () {
-        List<TodoModel> todoList = this.todoService.list();
-
-        return ResponseEntity.ok(todoList);
+    public List<TodoModel> list () {
+        return this.todoService.list();
     }
 }

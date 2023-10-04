@@ -3,9 +3,9 @@ package com.zanardo.todo.services;
 import com.zanardo.todo.customExceptions.BadRequest;
 import com.zanardo.todo.customExceptions.Conflict;
 import com.zanardo.todo.customExceptions.NotFound;
+import com.zanardo.todo.models.Todo.TodoDTO;
 import com.zanardo.todo.models.Todo.TodoModel;
 import com.zanardo.todo.repositories.TodoRepository;
-import com.zanardo.todo.models.Todo.UpdateTodoModelDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ public class TodoService {
         return this.todoRepository.save(todo);
     }
 
-    public void update(String todoId, UpdateTodoModelDto data) {
+    public void update(String todoId, TodoDTO data) {
         TodoModel todo = this.findById(todoId);
 
         String title = data.title();
