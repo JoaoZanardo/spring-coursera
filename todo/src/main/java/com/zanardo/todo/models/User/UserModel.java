@@ -21,19 +21,16 @@ public class UserModel implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private String accountName;
+    private String account;
 
     private String password;
 
     private UserRole role;
 
-    private Date createAt;
-
     public UserModel(UserDTO user) {
-        this.accountName = user.accountName();
+        this.account = user.account();
         this.password = user.password();
         this.role = user.role();
-        this.createAt = new Date();
     }
 
     @Override
@@ -50,7 +47,7 @@ public class UserModel implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.accountName;
+        return this.account;
     }
 
     @Override

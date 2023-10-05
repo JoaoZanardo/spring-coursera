@@ -1,6 +1,5 @@
 package com.zanardo.todo.services;
 
-import com.zanardo.todo.customExceptions.BadRequest;
 import com.zanardo.todo.customExceptions.Conflict;
 import com.zanardo.todo.customExceptions.NotFound;
 import com.zanardo.todo.models.Todo.TodoDTO;
@@ -8,7 +7,6 @@ import com.zanardo.todo.models.Todo.TodoModel;
 import com.zanardo.todo.repositories.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +14,10 @@ import java.util.Optional;
 public class TodoService {
     @Autowired
     private TodoRepository todoRepository;
+
+    public TodoService (TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
+    }
 
     public TodoModel findById(String todoId) {
         Optional<TodoModel> optionalTodo = this.todoRepository.findById(todoId);
@@ -34,14 +36,8 @@ public class TodoService {
     public void update(String todoId, TodoDTO data) {
         TodoModel todo = this.findById(todoId);
 
-        String title = data.title();
-        String body = data.body();
-
-        if (title == null) throw new BadRequest("Title is required!");
-        if (body == null) throw new BadRequest("Body is required!");
-
-        todo.setTitle(title);
-        todo.setBody(body);
+        todo.setTitle(data.title());
+        todo.setBody(data.body());
 
         this.todoRepository.save(todo);
     }
@@ -56,7 +52,7 @@ public class TodoService {
         return this.todoRepository.findAll();
     }
 
-    private boolean existsTitle (TodoModel todo) {
+    public boolean existsTitle (TodoModel todo) {
         Optional<TodoModel> optionalTodo = this.todoRepository.findByTitle(todo.getTitle());
 
         return optionalTodo.isPresent();

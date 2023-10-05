@@ -28,7 +28,7 @@ public class UsersService {
     }
 
     public UserModel create (UserModel user) {
-        UserDetails optionalUser = this.usersRepository.findByAccountName(user.getAccountName());
+        UserDetails optionalUser = this.usersRepository.findByAccount(user.getAccount());
 
         if (optionalUser != null) throw new Conflict("Account name already registered!");
 

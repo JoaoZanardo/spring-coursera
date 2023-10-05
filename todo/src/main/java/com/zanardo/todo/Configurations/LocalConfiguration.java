@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 @Profile("local")
 public class LocalConfiguration {
+
     @Autowired
     TodoRepository todoRepository;
-
 
     @Bean
     public CommandLineRunner execute () {

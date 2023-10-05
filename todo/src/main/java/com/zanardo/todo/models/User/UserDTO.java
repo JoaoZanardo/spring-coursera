@@ -1,7 +1,7 @@
 package com.zanardo.todo.models.User;
 
 public record UserDTO(
-        String accountName,
+        String account,
         String password,
         UserRole role
 ) {}

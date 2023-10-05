@@ -15,7 +15,6 @@ public class ErrorModel {
             String status,
             int code
     ) {
-        System.out.println("ASd as as dasdSA A AA A A A ");
         this.message = message;
         this.status = status;
         this.code = code;

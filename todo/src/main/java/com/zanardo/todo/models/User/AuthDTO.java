@@ -1,4 +1,4 @@
 package com.zanardo.todo.models.User;
 
-public record AuthDTO(String accountName, String password) {
+public record AuthDTO(String account, String password) {
 }

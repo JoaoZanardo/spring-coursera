@@ -13,8 +13,7 @@ public class AuthService implements UserDetailsService {
     UsersRepository usersRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String accountName) throws UsernameNotFoundException {
-        System.out.println("UIHDUHAS UDHAS UIDHASUI DHASID HASI HDAISDHUI");
-        return this.usersRepository.findByAccountName(accountName);
+    public UserDetails loadUserByUsername(String account) throws UsernameNotFoundException {
+        return this.usersRepository.findByAccount(account);
     }
 }
