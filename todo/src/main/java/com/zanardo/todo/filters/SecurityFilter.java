@@ -1,6 +1,9 @@
-package com.zanardo.todo.services;
+package com.zanardo.todo.filters;
 
+import com.zanardo.todo.adapters.Token.Token;
+import com.zanardo.todo.models.User.UserModel;
 import com.zanardo.todo.repositories.UsersRepository;
+import com.zanardo.todo.services.UsersService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,28 +11,29 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
     @Autowired
-    JwtService jwtService;
+    Token token;
 
     @Autowired
     UsersRepository usersRepository;
+
+    @Autowired
+    UsersService usersService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = getToken(request);
 
         if (token != null) {
-            String account = jwtService.validate(token);
+            String account = this.token.validate(token);
 
-            UserDetails user = this.usersRepository.findByAccount(account);
+            UserModel user = this.usersService.findByAccount(account);
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     user,
@@ -37,7 +41,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                     user.getAuthorities()
             );
 
-            SecurityContextHolder.getContext();
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);

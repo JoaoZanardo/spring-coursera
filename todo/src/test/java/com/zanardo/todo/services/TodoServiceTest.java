@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,35 +23,33 @@ class TodoServiceTest {
     @Mock
     private TodoRepository todoRepository;
 
-    private TodoService todoService = new TodoService(this.todoRepository);
-
-    private final String todoId = "todoId";
+    private TodoService todoService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        todoService = new TodoService(this.todoRepository);
+        this.todoService = new TodoService(this.todoRepository);
     }
 
     @Test
     void shouldFindById() {
-        this.validRepositoryFinById();
+        this.mockValidFindByIdReturn();
 
-        TodoModel actualTodo = this.todoService.findById(this.todoId);
+        TodoModel actualTodo = this.todoService.findById("todoId");
 
         assertEquals(this.todo, actualTodo);
     }
 
     @Test
     void shouldThrowNotFoundWhenFindById() {
-        Mockito.when(this.todoRepository.findById(this.todoId)).thenReturn(Optional.empty());
+        Mockito.when(this.todoRepository.findById("todoId")).thenReturn(Optional.empty());
 
-        assertThrows(NotFound.class, () -> this.todoService.findById(this.todoId));
+        assertThrows(NotFound.class, () -> this.todoService.findById("todoId"));
     }
 
     @Test
     void shouldCreate() {
-        Mockito.when(todoService.create(this.todo)).thenReturn(this.todo);
+        Mockito.when(this.todoRepository.save(this.todo)).thenReturn(this.todo);
 
         assertEquals(this.todoService.create(this.todo), this.todo);
     }
@@ -66,18 +63,18 @@ class TodoServiceTest {
 
     @Test
     void shouldUpdate() {
-        this.validRepositoryFinById();
+        this.mockValidFindByIdReturn();
 
-        this.todoService.update(this.todoId, this.todoDTO);
+        this.todoService.update("todoId", this.todoDTO);
 
         Mockito.verify(this.todoRepository).save(this.todo);
     }
 
     @Test
     void shouldDelete() {
-        this.validRepositoryFinById();
+        this.mockValidFindByIdReturn();
 
-        todoService.delete(this.todoId);
+        this.todoService.delete("todoId");
 
         Mockito.verify(this.todoRepository).delete(this.todo);
     }
@@ -85,14 +82,14 @@ class TodoServiceTest {
     @Test
     void shouldList() {
         List<TodoModel> todoList = new ArrayList<>();
-        Mockito.when(todoRepository.findAll()).thenReturn(todoList);
+        Mockito.when(this.todoRepository.findAll()).thenReturn(todoList);
 
-        List<TodoModel> actualTodoList = todoService.list();
+        List<TodoModel> actualTodoList = this.todoService.list();
 
         assertEquals(todoList, actualTodoList);
     }
 
-    private void validRepositoryFinById() {
-        Mockito.when(this.todoRepository.findById(this.todoId)).thenReturn(Optional.of(this.todo));
+    private void mockValidFindByIdReturn() {
+        Mockito.when(this.todoRepository.findById("todoId")).thenReturn(Optional.of(this.todo));
     }
 }
